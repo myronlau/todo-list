@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2, user-scalable=no">
+	<link rel="stylesheet" href="js/semantic/dist/semantic.min.css">
+	<script src="js/jquery/jquery-3.5.1.min.js"></script>
+	<script src="js/semantic/dist/semantic.min.js"></script>
+	<script src="js/vue/vue.min.js"></script>
+	<title>To Do List</title>
+	<style>
+		.ui.list .item {
+			padding: 1rem;
+		}
+	</style>
+</head>
+<body>
+	<br>
+	<div class="ui doubling stackable grid container">
+		<div class="ten wide centered column">
+			<div class="ui centered blue huge header">Todo list</div>
+			<div id="todo-list-example">
+				<div class="ui fluid huge action green input">
+					<input
+						v-model="newTodoText"
+						v-on:keyup.enter="addNewTodo"
+						type="text"
+						placeholder="I'm gonna do ..."
+					>
+					<button class="ui icon button" v-on:click="addNewTodo">
+						<i class="large plus icon"></i>
+					</button>
+				</div>
+				<div class="ui hidden divier"></div>
+				<div class="ui middle aligned divided animated big list">
+					<todo-item-component
+						v-for="(todoItem, index) in todosList"
+						v-bind:key="index"
+						v-bind:title="todoItem"
+						v-on:remove="todosList.splice(index, 1)"
+					></todo-item-component>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+		Vue.component('todo-item-component', {
+			props: ['title'],
+			template: '<div class="item">{{ title }}\
+									<div class="ui red mini right floated circular icon button"\
+										v-on:click="$emit(\'remove\')">\
+										<i class="remove icon"></i>\
+									</div>\
+								</div>'
+		});
+		var todoList = new Vue({
+			el: '#todo-list-example',
+			data: {
+				newTodoText: '',
+				todosList: [
+					
+				]
+			},
+			methods: {
+				addNewTodo: function () {
+					var strValue = this.newTodoText.replace(/\s+/g,"")
+					if (strValue.length == 0) {
+						this.newTodoText = ''
+					} else {
+						this.todosList.push(this.newTodoText)
+						this.newTodoText = ''
+					}
+				}
+			}
+		})
+	</script>
+</body>
+</html>
